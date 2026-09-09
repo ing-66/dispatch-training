@@ -1,0 +1,57 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+*.egg
+
+# Node / frontend build
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/dist/
+frontend/tsconfig.tsbuildinfo
+npm-debug.log*
+
+# Databases, backups and local state
+*.db
+*.db.*
+*.sqlite
+*.sqlite3
+*.bak
+*.dump
+*.mysql
+*.mariadb
+
+# Runtime/temp/render intermediates
+.workbook-runtime/
+*.xlsx.inspect.ndjson
+*.xlsx.*.png
+*.png.inspect.ndjson
+.cache/
+logs/
+*.log
+tmp/
+
+# Sensitive data-bearing generated artifacts
+# V1 question JSON/CSV/audit files contain original Guangzhou case records with
+# addresses and other personal data. They stay local-only and are not committed.
+artifacts/
+
+# Editor/OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
