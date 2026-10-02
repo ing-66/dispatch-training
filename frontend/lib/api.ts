@@ -13,4 +13,6 @@ export async function api<T>(path: string, options?: RequestInit): Promise<T> {
 export type Option = {department_id: string; name: string};
 export type Question = {id: string; case_origin: string; case_content: string; options: Option[]};
 export type Attempt = {attempt_id: string; mode: "challenge" | "practice"; level?: number; practice_cycle?: number; questions: Question[]};
-export type Feedback = {is_correct: boolean; selected_department: string; correct_department: Option; explanation: string; reference_basis: string};
+export type Evidence = {title?:string; source?:string; excerpt?:string; locator?:string; reason?:string};
+export type Feedback = {is_correct: boolean; selected_department: string; correct_department: Option; explanation: string; reference_basis: string; reference_basis_detail?:Evidence};
+export type PracticeProgress = {cycle:number; completed_count:number; remaining_count:number; total_count:number};

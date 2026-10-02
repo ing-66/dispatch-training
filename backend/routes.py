@@ -47,6 +47,24 @@ def dashboard(user_id: str = Depends(current_user), db: Session = Depends(get_db
                          "accuracy": round(practice_correct / practice_answers * 100) if practice_answers else 0}}
 
 
+@router.get("/practice/progress")
+def practice_progress(user_id: str = Depends(current_user), db: Session = Depends(get_db)):
+    engine.ensure_user(db, user_id)
+    total = db.scalar(select(func.count()).select_from(m.Question).where(
+        m.Question.question_type == "practice", m.Question.is_enabled.is_(True),
+        m.Question.review_status == "approved")) or 0
+    highest_cycle = db.scalar(select(func.max(m.PracticeQuestionProgress.cycle)).where(
+        m.PracticeQuestionProgress.user_id == user_id)) or 1
+    completed = db.scalar(select(func.count()).select_from(m.PracticeQuestionProgress).where(
+        m.PracticeQuestionProgress.user_id == user_id,
+        m.PracticeQuestionProgress.cycle == highest_cycle)) or 0
+    cycle = highest_cycle + 1 if total and completed >= total else highest_cycle
+    if cycle != highest_cycle:
+        completed = 0
+    return {"cycle": cycle, "completed_count": completed,
+            "remaining_count": max(0, total - completed), "total_count": total}
+
+
 @router.post("/levels/{level}/start")
 def start_level(level: int, user_id: str = Depends(current_user), db: Session = Depends(get_db)):
     return engine.start_level(db, user_id, level)
@@ -59,7 +77,14 @@ def start_practice(user_id: str = Depends(current_user), db: Session = Depends(g
 
 @router.post("/attempts/{attempt_id}/answer")
 def submit_answer(attempt_id: str, payload: AnswerRequest, user_id: str = Depends(current_user), db: Session = Depends(get_db)):
-    return engine.answer(db, attempt_id, user_id, payload.question_id, payload.selected_department_id)
+    result = engine.answer(db, attempt_id, user_id, payload.question_id, payload.selected_department_id)
+    question = db.get(m.Question, payload.question_id)
+    result["reference_basis_detail"] = {
+        "title": question.reference_basis_title, "source": question.reference_basis_source,
+        "excerpt": question.reference_basis_excerpt, "locator": question.reference_basis_locator,
+        "reason": question.reference_basis_reason,
+    }
+    return result
 
 
 @router.post("/attempts/{attempt_id}/complete")

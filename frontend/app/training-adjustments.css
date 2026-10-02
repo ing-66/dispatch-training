@@ -1,0 +1,7 @@
+.shell.trainingShell{padding-top:28px}
+.questionStage{position:relative}
+.questionArrow{position:absolute;top:50%;z-index:2;width:42px;height:42px;padding:0;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--blue);font-size:32px;line-height:1;display:grid;place-items:center;cursor:pointer;box-shadow:0 3px 12px #102a4318;transform:translateY(-50%)}
+.questionArrowLeft{left:-60px}
+.questionArrowRight{right:-60px}
+.questionArrow:disabled{color:#a9b1bc;background:#f5f7fa;cursor:not-allowed;box-shadow:none}
+@media(max-width:720px){.shell.trainingShell{padding-top:20px}.questionArrow{width:36px;height:36px;font-size:28px}.questionArrowLeft{left:-42px}.questionArrowRight{right:-42px}}
